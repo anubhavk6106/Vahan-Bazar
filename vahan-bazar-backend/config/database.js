@@ -5,7 +5,7 @@ dotenv.config();
 
 let sequelize;
 
-// ✅ Use SQLite if enabled (local dev)
+// ✅ Use SQLite in local dev
 if (process.env.USE_SQLITE === 'true') {
   sequelize = new Sequelize({
     dialect: 'sqlite',
@@ -19,14 +19,14 @@ if (process.env.USE_SQLITE === 'true') {
     }
   });
 }
-// ✅ Use DATABASE_URL if provided (Render / Production)
+// ✅ Use DATABASE_URL if available (Render)
 else if (process.env.DATABASE_URL) {
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
     dialectOptions: {
       ssl: {
         require: true,
-        rejectUnauthorized: false, // needed for Render Postgres
+        rejectUnauthorized: false, // 🔑 Needed for Render
       },
     },
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
@@ -44,7 +44,7 @@ else if (process.env.DATABASE_URL) {
     }
   });
 }
-// ✅ Fallback: manual Postgres config (if DATABASE_URL not set)
+// ✅ Fallback (manual Postgres config for local dev if DATABASE_URL not set)
 else {
   sequelize = new Sequelize(
     process.env.DB_NAME || 'vahan_bazar',
@@ -71,7 +71,7 @@ else {
   );
 }
 
-// ✅ Test database connection
+// ✅ Test connection
 const testConnection = async () => {
   try {
     await sequelize.authenticate();

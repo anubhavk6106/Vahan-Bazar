@@ -122,6 +122,11 @@ app.use(`/api/${API_VERSION}/admin`, adminRoutes);
 app.use(`/api/${API_VERSION}/support`, supportRoutes);
 app.use(`/api/${API_VERSION}/chat`, chatRoutes);
 
+// 👇 Add friendly root route
+app.get("/", (req, res) => {
+  res.status(200).send("🚀 Vahan Bazar API is running! Use /api/v1 for endpoints.");
+});
+
 // Error handling middleware
 app.use(notFound);
 app.use(errorHandler);
