@@ -35,14 +35,18 @@ const API_VERSION = process.env.API_VERSION || 'v1';
 // Security middleware
 app.use(helmet());
 
-// CORS configuration
-const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+// ✅ Updated CORS configuration
+const allowedOrigins = [
+  process.env.FRONTEND_URL,   // Your Render frontend URL (set in env)
+  "http://localhost:5173"     // Local Vite dev server
+].filter(Boolean);
+
+app.use(cors({
+  origin: allowedOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-};
-app.use(cors(corsOptions));
+}));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -122,7 +126,7 @@ app.use(`/api/${API_VERSION}/admin`, adminRoutes);
 app.use(`/api/${API_VERSION}/support`, supportRoutes);
 app.use(`/api/${API_VERSION}/chat`, chatRoutes);
 
-// 👇 Add friendly root route
+// 👇 Friendly root route
 app.get("/", (req, res) => {
   res.status(200).send("🚀 Vahan Bazar API is running! Use /api/v1 for endpoints.");
 });
