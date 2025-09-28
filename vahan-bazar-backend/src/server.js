@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 
 // Import database
-import { sequelize, testConnection } from '../config/database.js';
+import sequelize from '../config/database.js';
 import '../models/index.js'; // Initialize models and associations
 
 // Import routes
@@ -138,8 +138,6 @@ app.use(errorHandler);
 // Initialize database and start server
 const startServer = async () => {
   try {
-    // Test database connection
-    await testConnection();
     
     // Sync database (create tables if they don't exist)
     await sequelize.sync({ force: false });
